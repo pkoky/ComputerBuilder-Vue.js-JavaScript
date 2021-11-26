@@ -1,0 +1,22 @@
+{
+  "name": "project4computerbuilder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "npx tailwindcss-cli@latest build ./src/vendor/tailwind/import.css -o ./src/vendor/tailwind/tailwind.css --config ./src/vendor/tailwind/tailwind.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.4.0",
+    "cross-env": "^7.0.3",
+    "postcss": "^8.3.11",
+    "tailwindcss": "^2.2.19"
+  },
+  "dependencies": {
+    "node-fetch": "^3.1.0"
+  }
+}
