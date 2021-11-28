@@ -13,24 +13,30 @@ const config = {
 }
 
 class Controller {
-    static getSelectedObj(arr, selectedModel) {
-        let resultObj = arr.find(ele => ele.Model === selectedModel);
-        return resultObj;
+    static getTargetMap(data) {
+        let resultMap = new Map();
+
+        for (let currObj of data) {
+            if (resultMap.has(currObj.Brand)) {
+                resultMap.get(currObj.Brand).push(currObj);
+            } else {
+                resultMap.set(currObj.Brand, [currObj]);
+            }
+        }
+        return resultMap;
+    }
+
+    static getResultObj(arr, selectedModel) {
+        return arr.filter(ele => ele.Model === selectedModel)[0];
     }
 }
 
+// select => Brand, Model
 function selectCpu() {
     fetch(config.URL + "cpu").then(res=>res.json()).then(function(data) {
-        let cpuMap = new Map();
+        // キーをブランドでセットされたMap
+        let cpuMap = Controller.getTargetMap(data);
     
-        for (let curr of data) {
-            if (cpuMap.has(curr.Brand)) {
-                cpuMap.get(curr.Brand).push(curr)
-            } else {
-                cpuMap.set(curr.Brand, [curr]);
-            };
-        }
-        
         // cpu連想配列からbrandを配列として抜き出す
         let brandArr = Array.from(cpuMap.keys());
 
@@ -44,8 +50,9 @@ function selectCpu() {
         cpuArrForSelectModel.forEach(ele => modelArr.push(ele.Model));
         
         let selectedModel = modelArr[0];
+
         // ブランドとモデルが一致したデータを抽出
-        let cpuObj = cpuArrForSelectModel.filter(ele => ele.Model === selectedModel)[0];
+        let cpuObj = Controller.getResultObj(cpuArrForSelectModel, selectedModel);
         console.log(cpuObj)
 
         
@@ -54,17 +61,12 @@ function selectCpu() {
     })
 }
 
+// select => Brand, Model
 function selectGpu() {
     fetch(config.URL + "gpu").then(res=>res.json()).then(function(data) {
-        let gpuMap = new Map();
+        // キーをブランドでセットされたMap
+        let gpuMap = Controller.getTargetMap(data);
 
-        for (let curr of data) {
-            if (gpuMap.has(curr.Brand)) {
-                gpuMap.get(curr.Brand).push(curr)
-            } else {
-                gpuMap.set(curr.Brand, [curr]);
-            };
-        }
         let brandArr = Array.from(gpuMap.keys());
         
         let selectedBrand = brandArr[0];
@@ -76,13 +78,15 @@ function selectGpu() {
 
         let selectedModel = modelArr[0];
 
-        let gpuObj = gpuArrForSelectModel.filter(ele => ele.Model === selectedModel)[0];
+        let gpuObj = Controller.getResultObj(gpuArrForSelectModel, selectedModel);
 
         console.log(gpuObj)
 
         selectRam()
     })
 }
+
+// select => Quantity, Brand, Model
 
 function selectRam() {
     fetch(config.URL + "ram").then(response=>response.json()).then(function(data) {
@@ -115,7 +119,7 @@ function selectRam() {
 
         let selectedModel = modelArr[1];
 
-        let ramObj = ramArrForSelectModel.filter(ele => ele.Model === selectedModel)[0];
+        let ramObj = Controller.getResultObj(ramArrForSelectModel, selectedModel);
 
         console.log(ramObj)
 
@@ -123,7 +127,7 @@ function selectRam() {
     })
 }
 
-
+// select => Type, Capacity, Brand, Model
 function selectStorage() {
     let selectedStorageType = config.STORAGE[0];
     fetch(config.URL + selectedStorageType).then(response=>response.json()).then(function(data) {
@@ -178,7 +182,7 @@ function selectStorage() {
         storageArrForSelectModel.forEach(ele => modelArr.push(ele.Model));
 
         let selectedModel = modelArr[0];
-        let storageObj = storageArrForSelectModel.filter(ele => ele.Model === selectedModel)[0];
+        let storageObj = Controller.getResultObj(storageArrForSelectModel, selectedModel);
         console.log(storageObj)
     })
 }
@@ -194,3 +198,4 @@ selectCpu()
 //     }
 // })
 
+// test
