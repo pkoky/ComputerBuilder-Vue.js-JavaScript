@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
+  
   "scripts": {
     "build": "npx tailwindcss-cli@latest build ./src/vendor/tailwind/import.css -o ./src/vendor/tailwind/tailwind.css --config ./src/vendor/tailwind/tailwind.config.js"
   },

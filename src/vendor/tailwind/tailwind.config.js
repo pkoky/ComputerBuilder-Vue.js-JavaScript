@@ -1,7 +1,10 @@
 const colors = require('tailwindcss/colors')
 
 module.exports = {
-  purge: [],
+  purge: {
+      enabled: true,
+      content:['./src/*.html', './src/.js']
+  },
   presets: [],
   darkMode: false, // or 'media' or 'class'
   theme: {
@@ -12,20 +15,37 @@ module.exports = {
       xl: '1280px',
       '2xl': '1536px',
     },
-    colors: {
-      transparent: 'transparent',
-      current: 'currentColor',
-
-      black: colors.black,
-      white: colors.white,
-      gray: colors.coolGray,
-      red: colors.red,
-      yellow: colors.amber,
-      green: colors.emerald,
-      blue: colors.blue,
-      indigo: colors.indigo,
-      purple: colors.violet,
-      pink: colors.pink,
+    extend: {
+        colors: {
+            'light-green': '#C8EFEA',
+            'semi-light-green': '#68CFC3',
+            'semi-dark-green': '#1DAF9E',
+            'dark-green': '#009F8C',
+    
+            'light-blue': '#CAE7F2',
+            'semi-light-blue': '#6CBAD8',
+            'semi-dark-blue': '#1F91BE',
+            'dark-blue': '#007FB1',
+    
+            'light-pink': '#F4D2DE',
+            'semi-light-pink': '#DF81A2',
+            'semi-dark-pink': '#CA3C6E',
+            'dark-pink': '#BF1E56',
+    
+            transparent: 'transparent',
+            current: 'currentColor',
+    
+            black: colors.black,
+            white: colors.white,
+            gray: colors.coolGray,
+            red: colors.red,
+            yellow: colors.amber,
+            green: colors.emerald,
+            blue: colors.blue,
+            indigo: colors.indigo,
+            purple: colors.violet,
+            pink: colors.pink,
+        },
     },
     spacing: {
       px: '1px',

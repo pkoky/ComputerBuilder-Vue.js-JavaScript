@@ -1,5 +1,21 @@
-import fetch from 'node-fetch'
+// import fetch from 'node-fetch'
 
+class User {
+    constructor() {
+        this.computers = [];
+    }
+}
+
+class Computer {
+    constructor(cpu, gpu, ram, storage) {
+        this.cpu = cpu;
+        this.gpu = gpu;
+        this.ram = ram;
+        this.storage = storage;
+    }
+
+    
+} 
 
 const config = {
     'URL': 'https://api.recursionist.io/builder/computers?type=',
@@ -13,6 +29,11 @@ const config = {
 }
 
 class Controller {
+
+    static startCreateComputer() {
+        let obj = new Computer();
+        obj = selectCpu(obj);
+    }
 
     static getKeysArr(map) {
         return Array.from(map.keys());
@@ -32,10 +53,34 @@ class Controller {
     static getResultObj(arr, selectedModel) {
         return arr.filter(ele => ele.Model === selectedModel)[0];
     }
+
+
+    static sortStorageArr(arr) {
+        arr.sort(function(a,b) {
+            let aStorageType = a.substr(a.length-2, 1);
+            let bStorageType = b.substr(b.length-2, 1);
+            
+            let aStorageCapacity = Number(a.substring(0, a.length-2));
+            let bStorageCapacity = Number(b.substring(0, b.length-2));
+            
+            if (bStorageType === "T" && aStorageType != bStorageType) {
+                return -1;
+            } else if (aStorageType === "T" && aStorageType != bStorageType) {
+                return 1;
+            } else if (aStorageCapacity > bStorageCapacity) {
+                return 1;
+            } else {
+                return -1;
+            }
+        })
+        return arr;
+    }
+
+    
 }
 
 // select => Brand, Model
-function selectCpu() {
+function selectCpu(obj) {
     fetch(config.URL + "cpu").then(res=>res.json()).then(function(data) {
         // キーをブランドでセットされたMap
         let cpuMap = Controller.getTargetMap(data);
@@ -57,16 +102,15 @@ function selectCpu() {
 
         // ブランドとモデルが一致したデータを抽出
         let cpuObj = Controller.getResultObj(cpuArrForSelectModel, selectedModel);
-        console.log(cpuObj)
-
+   
+        obj.cpu = cpuObj;
         
-        selectGpu()
-
+        selectGpu(obj)
     })
 }
 
 // select => Brand, Model
-function selectGpu() {
+function selectGpu(obj) {
     fetch(config.URL + "gpu").then(res=>res.json()).then(function(data) {
         // キーをブランドでセットされたMap
         let gpuMap = Controller.getTargetMap(data);
@@ -84,15 +128,16 @@ function selectGpu() {
 
         let gpuObj = Controller.getResultObj(gpuArrForSelectModel, selectedModel);
 
-        console.log(gpuObj)
+        obj.gpu = gpuObj;
 
-        selectRam()
+        selectRam(obj)
+
     })
 }
 
 // select => Quantity, Brand, Model
 
-function selectRam() {
+function selectRam(obj) {
     fetch(config.URL + "ram").then(response=>response.json()).then(function(data) {
         let ramMap = new Map();
 
@@ -125,14 +170,15 @@ function selectRam() {
 
         let ramObj = Controller.getResultObj(ramArrForSelectModel, selectedModel);
 
-        console.log(ramObj)
+        obj.ram = ramObj;
 
-        selectStorage();
+        selectStorage(obj)
+
     })
 }
 
 // select => Type, Capacity, Brand, Model
-function selectStorage() {
+function selectStorage(obj) {
     let selectedStorageType = config.STORAGE[0];
     fetch(config.URL + selectedStorageType).then(response=>response.json()).then(function(data) {
         let storageMap = new Map();
@@ -151,23 +197,7 @@ function selectStorage() {
 
         let storageArr = Controller.getKeysArr(storageMap);
         
-        storageArr.sort(function(a,b) {
-            let aStorageType = a.substr(a.length-2, 1);
-            let bStorageType = b.substr(b.length-2, 1);
-            
-            let aStorageCapacity = a.substring(0, a.length-2) ;
-            let bStorageCapacity = b.substring(0, b.length-2) ;
-            
-            if (bStorageType === "T" && aStorageType != bStorageType) {
-                return -1;
-            } else if (aStorageType === "T" && aStorageType != bStorageType) {
-                return 1;
-            } else if (aStorageCapacity > bStorageCapacity) {
-                return 1;
-            } else {
-                return -1;
-            }
-        })
+        storageArr = Controller.sortStorageArr(storageArr);
 
         let selectedStorageCapacity = storageArr[2];
 
@@ -187,18 +217,20 @@ function selectStorage() {
 
         let selectedModel = modelArr[0];
         let storageObj = Controller.getResultObj(storageArrForSelectModel, selectedModel);
-        console.log(storageObj)
+        
+        obj.storage = storageObj;
+        console.log(obj)
     })
 }
 
+Controller.startCreateComputer()
 
 
-selectCpu()
+var app = new Vue({
+    el: '#app',
+    data: {
+      message: 'Hello Vue!'
+    }
+})
 
-// var app = new Vue({
-//     el: '#app',
-//     data: {
-//       message: 'Hello Vue!'
-//     }
-// })
 
