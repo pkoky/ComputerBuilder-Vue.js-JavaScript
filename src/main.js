@@ -13,16 +13,19 @@ const config = {
 }
 
 class Controller {
+
+    static getKeysArr(map) {
+        return Array.from(map.keys());
+    }
+
     static getTargetMap(data) {
         let resultMap = new Map();
 
         for (let currObj of data) {
-            if (resultMap.has(currObj.Brand)) {
-                resultMap.get(currObj.Brand).push(currObj);
-            } else {
-                resultMap.set(currObj.Brand, [currObj]);
-            }
+            if (resultMap.has(currObj.Brand)) resultMap.get(currObj.Brand).push(currObj);
+            else resultMap.set(currObj.Brand, [currObj]);
         }
+
         return resultMap;
     }
 
@@ -38,7 +41,8 @@ function selectCpu() {
         let cpuMap = Controller.getTargetMap(data);
     
         // cpu連想配列からbrandを配列として抜き出す
-        let brandArr = Array.from(cpuMap.keys());
+        let brandArr = Controller.getKeysArr(cpuMap);
+
 
         // Brandをセレクト
         let selectedBrand = brandArr[1];
@@ -67,7 +71,7 @@ function selectGpu() {
         // キーをブランドでセットされたMap
         let gpuMap = Controller.getTargetMap(data);
 
-        let brandArr = Array.from(gpuMap.keys());
+        let brandArr = Controller.getKeysArr(gpuMap);
         
         let selectedBrand = brandArr[0];
 
@@ -103,7 +107,7 @@ function selectRam() {
             };
         }
 
-        let numArr = Array.from(ramMap.keys());
+        let numArr = Controller.getKeysArr(ramMap);
         let selectedNum = numArr[1];
 
         let brandSet = new Set();
@@ -145,7 +149,7 @@ function selectStorage() {
             };
         }
 
-        let storageArr = Array.from(storageMap.keys());
+        let storageArr = Controller.getKeysArr(storageMap);
         
         storageArr.sort(function(a,b) {
             let aStorageType = a.substr(a.length-2, 1);
@@ -198,4 +202,3 @@ selectCpu()
 //     }
 // })
 
-// test
