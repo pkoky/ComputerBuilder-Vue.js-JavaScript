@@ -104,8 +104,7 @@ function selectCpu(obj) {
         let cpuObj = Controller.getResultObj(cpuArrForSelectModel, selectedModel);
    
         obj.cpu = cpuObj;
-        
-        selectGpu(obj)
+        // selectGpu(obj)
     })
 }
 
@@ -223,13 +222,70 @@ function selectStorage(obj) {
     })
 }
 
-Controller.startCreateComputer()
+// Controller.startCreateComputer()
+
+var SelectBrandComponent = {
+    template: `#selectBrandComponent`,
+    props: ['brands'],
+    data() {
+        return {
+            brandArr: this.brands,
+        }
+    },
+    updated: function() {
+        console.log('selectBrandComponent created')
+    }
+}
+
+
+var CpuComponent = {
+    template:`#CpuComponent`,
+    props:['computer'],
+    data(){
+        return {
+            computerObj: 'this.computer',
+            brandArr: [],
+        }
+    },
+    created: async function() {
+        await fetch(config.URL + "cpu").then(res=>res.json()).then(function(data) {
+            // キーをブランドでセットされたMap
+            let cpuMap = Controller.getTargetMap(data);
+        
+            // cpu連想配列からbrandを配列として抜き出す
+            let brandArr = Controller.getKeysArr(cpuMap);
+
+            this.brandArr = brandArr;
+            console.log('CpuComponent created')
+        })
+    },
+    components: {
+        'select-brand': SelectBrandComponent,
+
+    }
+}
+
+
+var ComputerComponent = {
+    template: '#computerComponent',
+    data(){
+        return {
+            computerObj: new Computer(),
+        }
+    },
+    components: {
+        'cpu-component': CpuComponent,
+    }
+}
 
 
 var app = new Vue({
     el: '#app',
     data: {
-      message: 'Hello Vue!'
+      user: new User(),
+    },
+    components: {
+        'computer-component': ComputerComponent,
     }
 })
 
