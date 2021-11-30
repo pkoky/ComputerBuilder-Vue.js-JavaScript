@@ -1,10 +1,17 @@
 // import fetch from 'node-fetch'
 
-class User {
-    constructor() {
-        this.computers = [];
-    }
+const config = {
+    'URL': 'https://api.recursionist.io/builder/computers?type=',
+    'CPU': {
+        'Brand': [],
+        'Model': [],
+    },
+    'GPU': [],
+    'STORAGE': ['ssd', 'hdd'],
 }
+
+let a = config.cpuMap
+
 
 class Computer {
     constructor(cpu, gpu, ram, storage) {
@@ -13,30 +20,76 @@ class Computer {
         this.ram = ram;
         this.storage = storage;
     }
-
-    
-} 
-
-const config = {
-    'URL': 'https://api.recursionist.io/builder/computers?type=',
-    'CPU': {
-        'Brand': [],
-        'Model': [],
-    },
-    'GPU': [],
-    'STORAGE': ['ssd', 'hdd']
-
 }
 
-class Controller {
 
-    static startCreateComputer() {
-        let obj = new Computer();
-        obj = selectCpu(obj);
+class User {
+    constructor() {
+        this.computers = [];
+    }
+}
+
+class MapData {
+    constructor(cpu, gpu, ram, ssd, hdd) {
+        this.cpu = cpu;
+        this.gpu = gpu;
+        this.ram = ram;
+        this.ssd = ssd;
+        this.hdd = hdd;
     }
 
+    getCpuData(maps) {
+        fetch(config.URL + 'cpu')
+            .then(res => res.json())
+            .then(data => {
+                this.cpu = Controller.getTargetMap(data);
+            })
+    }
+}
+
+
+class Controller {
+    
     static getKeysArr(map) {
         return Array.from(map.keys());
+    }
+
+    static getRamMap(data) {
+        let resultMap = new Map();
+
+        for (let curr of data) {
+            let spaceIndex = curr.Model.lastIndexOf(' ');
+            let xIndex = curr.Model.lastIndexOf('x');
+            let currNum = curr.Model.substring(spaceIndex+1, xIndex);
+            if (resultMap.has(currNum)) {
+                resultMap.get(currNum).push(curr)
+            } else {
+                resultMap.set(currNum, [curr]);
+            };
+        }
+
+        return resultMap;
+    }
+
+    static getResultObj(arr, selectedModel) {
+        return arr.filter(ele => ele.Model === selectedModel)[0];
+    }
+
+    static getStorageMap(data) {
+        let resultMap = new Map();
+
+        for (let curr of data) {
+            let bIndex = curr.Model.lastIndexOf('B');
+            let spaceIndex = curr.Model.lastIndexOf(' ', bIndex);
+            let currStorageCapacity = curr.Model.substring(spaceIndex+1, bIndex+1);
+
+            if (resultMap.has(currStorageCapacity)) {
+                resultMap.get(currStorageCapacity).push(curr)
+            } else {
+                resultMap.set(currStorageCapacity, [curr]);
+            };
+        }
+        return resultMap;
     }
 
     static getTargetMap(data) {
@@ -49,11 +102,6 @@ class Controller {
 
         return resultMap;
     }
-
-    static getResultObj(arr, selectedModel) {
-        return arr.filter(ele => ele.Model === selectedModel)[0];
-    }
-
 
     static sortStorageArr(arr) {
         arr.sort(function(a,b) {
@@ -75,9 +123,10 @@ class Controller {
         })
         return arr;
     }
-
-    
 }
+
+
+
 
 // select => Brand, Model
 function selectCpu(obj) {
@@ -218,75 +267,196 @@ function selectStorage(obj) {
         let storageObj = Controller.getResultObj(storageArrForSelectModel, selectedModel);
         
         obj.storage = storageObj;
-        console.log(obj)
     })
 }
 
-// Controller.startCreateComputer()
 
-var SelectBrandComponent = {
-    template: `#selectBrandComponent`,
-    props: ['brands'],
-    data() {
+
+
+
+var RamComponent = {
+    template: `#ramComponent`,
+    data(){
         return {
-            brandArr: this.brands,
+            map: '',
+            numArr: '',
+            selectedNum: '',
+            brandArr: '',
+            selectedBrand: '',
+            modelArr: [],
         }
     },
-    updated: function() {
-        console.log('selectBrandComponent created')
+    created() {
+        this.getRamData();
+    },
+    methods: {
+        getRamData() {
+            Promise.resolve(fetch(config.URL + 'ram'))
+            .then(res => res.json())
+            .then(data => {
+                this.map = Controller.getRamMap(data);
+                this.numArr = Controller.getKeysArr(this.map);
+                this.numArr.sort();
+            })
+        },
+
+        selectBrand() {
+            this.modelArr = [];
+            let arrForSelectModel = this.map.get(this.selectedBrand);
+            // セレクトしたブランドの配列からモデルを抜き出し
+            arrForSelectModel.forEach(ele => this.modelArr.push(ele.Model));
+        },
+
+        setBrands() {
+            this.brandArr = [];
+            let brandSet = new Set();
+
+            // ブランド抽出
+            this.map.get(this.selectedNum).forEach(ele => brandSet.add(ele.Brand))
+
+            this.brandArr = Array.from(brandSet);
+        },
+
+        setModel() {
+            
+        }
     }
 }
+
+
+
+
+var GpuComponent = {
+    template: '#gpuComponent',
+    data(){
+        return {
+            map: '',
+            brandArr: '',
+            selectedBrand: '',
+            modelArr: [],
+        }
+    },
+    created() {
+        this.getGpuData();
+    },
+    methods: {
+        getGpuData() {
+            Promise.resolve(fetch(config.URL + 'gpu'))
+            .then(res => res.json())
+            .then(data => {
+                this.map = Controller.getTargetMap(data);
+                this.brandArr = Controller.getKeysArr(this.map);
+            })
+        },
+
+        selectBrand() {
+            this.modelArr = [];
+            let arrForSelectModel = this.map.get(this.selectedBrand);
+            // セレクトしたブランドの配列からモデルを抜き出し
+            arrForSelectModel.forEach(ele => this.modelArr.push(ele.Model));
+        }
+    }
+}
+
 
 
 var CpuComponent = {
-    template:`#CpuComponent`,
-    props:['computer'],
+    template: '#cpuComponent',
     data(){
         return {
-            computerObj: 'this.computer',
-            brandArr: [],
+            cpuMap: '',
+            cpuBrandArr: '',
+            selectedBrand: '',
+            cpuModelArr: [],
         }
     },
-    created: async function() {
-        await fetch(config.URL + "cpu").then(res=>res.json()).then(function(data) {
-            // キーをブランドでセットされたMap
-            let cpuMap = Controller.getTargetMap(data);
-        
-            // cpu連想配列からbrandを配列として抜き出す
-            let brandArr = Controller.getKeysArr(cpuMap);
-
-            this.brandArr = brandArr;
-            console.log('CpuComponent created')
-        })
+    created() {
+        this.getCpuData();
     },
-    components: {
-        'select-brand': SelectBrandComponent,
+    methods: {
+        getCpuData() {
+            Promise.resolve(fetch(config.URL + 'cpu'))
+            .then(res => res.json())
+            .then(data => {
+                this.cpuMap = Controller.getTargetMap(data);
+                this.cpuBrandArr = Controller.getKeysArr(this.cpuMap);
+            })
+        },
 
+        selectBrand() {
+            this.cpuModelArr = [];
+            let cpuArrForSelectModel = this.cpuMap.get(this.selectedBrand);
+            // セレクトしたブランドの配列からモデルを抜き出し
+            cpuArrForSelectModel.forEach(ele => this.cpuModelArr.push(ele.Model));
+        }
     }
+
 }
 
-
-var ComputerComponent = {
-    template: '#computerComponent',
+var ComputerSelectComponent = {
+    template: '#computerSelectComponent',
     data(){
         return {
-            computerObj: new Computer(),
         }
+    },
+    created: function() {
+    },
+    watch: {
+    },
+    methods: {
     },
     components: {
         'cpu-component': CpuComponent,
+        'gpu-component': GpuComponent,
+        'ram-component': RamComponent,
     }
 }
 
 
-var app = new Vue({
+var vm = new Vue({
     el: '#app',
     data: {
-      user: new User(),
+        user: new User(),
     },
     components: {
-        'computer-component': ComputerComponent,
+        'computer-select-component': ComputerSelectComponent,
     }
 })
 
+// // console.log(vm.cpuMaps)
+// Promise.resolve(fetch(config.URL + 'cpu'))
+//     .then(res => res.json())
+//     .then(data => {
+//         maps.cpu = Controller.getTargetMap(data);
+//         // vm.cpuBrands = Array.from(vm.cpuMap.keys());
+//     })
 
+// Promise.resolve(fetch(config.URL + 'gpu'))
+//     .then(res => res.json())
+//     .then(data => {
+//         vm.mapData.gpu = Controller.getTargetMap(data);
+//     })
+
+// Promise.resolve(fetch(config.URL + 'ram'))
+//     .then(res => res.json())
+//     .then(data => {
+//         vm.mapData.ram = Controller.getRamMap(data);
+//     })
+
+// Promise.resolve(fetch(config.URL + 'ssd'))
+//     .then(res => res.json())
+//     .then(data => {
+//         vm.mapData.ssd = Controller.getStorageMap(data);
+//     })
+
+// Promise.resolve(fetch(config.URL + 'hdd'))
+//     .then(res => res.json())
+//     .then(data => {
+//         vm.mapData.hdd = Controller.getStorageMap(data);
+//     })
+//     .then(()=>{
+//         vm.mapData = JSON.stringify(vm.mapData)
+        
+//     })
+    // .then(()=> console.log(vm.mapData))
+// console.log(maps)

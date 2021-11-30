@@ -13,8 +13,9 @@
         <div class="md:w-1/3  rounded-lg  p-4 z-10">
             <h1 class=" text-4xl font-serif shadow-1 text-center text-semi-dark-blue z-10">Computer Builder</h1>
         </div>
-        <computer-component>
-        </computer-component>
+            
+        <computer-select-component></computer-select-component>
+
         <!-- selectArea -->
         <div class="w-full p-5 flex flex-col justify-start">
             <!-- 1 -->
@@ -181,21 +182,80 @@
     </div>
 
 
-    <!-- Template -> SelectBrandComponent -->
-    <script type="text/x-template" id="selectBrandComponent">
-        <div class="flex ">
-            {{brandArr}}
-            <h4>Brand: </h4>
-            <select class="ml-5 rounded">
-                <option disabled selected value=""> - </option>
-                <option>Intel</option>
-                <option>AMD</option>
-            </select>
+
+
+    <!-- Ram -->
+    <script type="text/x-template" id="ramComponent">
+        <div>
+            <div class="">
+                <div class="p-3 flex">
+                    <p>step 3 : メモリーカードの数量と種類を決めてください</p>
+                    <div class="flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-pink-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-pink-500"></span>
+                    </div>
+                </div>
+                <div class="md:flex p-3 ">
+                    <div class="flex ">
+                        <h4>数量:</h4>
+                        <select class="ml-5 rounded" v-on:change="setBrands" v-model="selectedNum">
+                            <option disabled selected value=""> - </option>
+                            <option v-for="num in numArr">{{ num }}</option>
+                        </select>
+                    </div>
+                    <div class="flex pt-3 md:py-0 md:pl-20">
+                        <h4>Brand: </h4>
+                        <select class="ml-5 rounded" v-on:change="setModel" v-model="selectedBrand">
+                            <option disabled selected value=""> - </option>
+                            <option v-for="brand in brandArr">{{ brand }}</option>
+                        </select>
+                    </div>
+                    <div class="flex pt-3 md:py-0 md:pl-20">
+                        <h4>Model:</h4>
+                        <select class="ml-5 rounded">
+                            <option disabled selected value=""> - </option>
+                            <option>Core i5-9500</option>
+                            <option>Core i9-10980HK</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
     </script>
 
-    <!-- Template -> CpuComponent -->
-    <script type="text/x-template" id="CpuComponent">
+    <!-- Gpu -->
+    <script type="text/x-template" id="gpuComponent">
+        <div>
+            <div class="">
+                <div class="p-3 flex">
+                    <p>step 2 : GPUを選んでください</p>
+                    <div class="flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-pink-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-pink-500"></span>
+                    </div>
+                </div>
+                <div class="md:flex p-3 ">
+                    <div class="flex">
+                        <h4>Brand: </h4>
+                        <select class="ml-5 rounded" v-on:change="selectBrand" v-model="selectedBrand">
+                            <option disabled selected value=""> - </option>
+                            <option v-for="brand in brandArr">{{ brand }}</option>
+                        </select>
+                    </div>
+                    <div class="flex pt-3 md:py-0 md:pl-20">
+                        <h4>Model:</h4>
+                        <select class="ml-5 rounded">
+                            <option disabled selected value=""> - </option>
+                            <option v-for="model in modelArr">{{ model }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- Cpu -->
+    <script type="text/x-template" id="cpuComponent">
         <!-- 1 -->
         <div class="">
             <div class="p-3 flex">
@@ -207,27 +267,92 @@
             </div>
             
             <div class="md:flex p-3 ">
-
-                <select-brand
-                    v-bind:brands="brandArr"
-                ></select-brand>
-
+                <div class="flex ">
+                    <h4>Brand: </h4>
+                    <select class="ml-5 rounded" v-on:change="selectBrand" v-model="selectedBrand">
+                        <option disabled selected value=""> - </option>
+                        <option v-for="brand in cpuBrandArr">{{ brand }}</option>
+                    </select>
+                </div>
                 <div class="flex pt-3 md:py-0 md:pl-20 ">
                     <h4>Model:</h4>
                     <select class="ml-5 rounded">
                         <option disabled selected value=""> - </option>
-                        <option>Core i5-9500</option>
-                        <option>Core i9-10980HK</option>
+                        <option v-for="model in cpuModelArr">{{ model }}</option>
                     </select>
                 </div>
             </div>
         </div>
     </script>
 
+
     <!-- Template -> computerComponent -->
-    <script type="text/x-template" id="computerComponent">
+    <script type="text/x-template" id="computerSelectComponent">
         <div class="w-full p-5 flex flex-col justify-start">
+            <!-- 1 -->
             <cpu-component></cpu-component>
+
+            <!-- 2 -->
+            <gpu-component></gpu-component>
+
+            <!-- 3 -->
+            <ram-component></ram-component>
+
+            <!-- 4 -->
+            <div>
+                <div class="">
+                    <div class="p-3 flex">
+                        <p>step 4 : ストレージを決めてください</p>
+                        <div class="flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-pink-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-pink-500"></span>
+                        </div>
+                    </div>
+                    <div class="md:flex p-3 ">
+                        <div class="flex">
+                            <h4>HDD or SSD:</h4>
+                            <select name="" id="" class="ml-5 rounded">
+                                <option disabled selected value=""> - </option>
+                                <option value="">HDD</option>
+                                <option value="">SSD</option>
+                            </select>
+                        </div>
+                        <div class="flex pt-3 md:py-0 md:pl-20">
+                            <h4>Storage:</h4>
+                            <select name="" id="" class="ml-5 rounded">
+                                <option disabled selected value=""> - </option>
+                                <option value="">1TB</option>
+                                <option value="">500GB</option>
+                            </select>
+                        </div>
+                        <div class="flex pt-3 md:py-0 md:pl-20">
+                            <h4>Brand: </h4>
+                            <select class="ml-5 rounded">
+                                <option disabled selected value=""> - </option>
+                                <option>Intel</option>
+                                <option>AMD</option>
+                            </select>
+                        </div>
+                        <div class="flex pt-3 md:py-0 md:pl-20">
+                            <h4>Model:</h4>
+                            <select class="ml-5 rounded">
+                                <option disabled selected value=""> - </option>
+                                <option>Core i5-9500</option>
+                                <option>Core i9-10980HK</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- addButton -->
+            <div class="px-3 py-5">
+                <div class="">
+                    <button class="bg-white hover:bg-gray-100 hover:shadow-none  text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow-lg">性能を見てみる</button>
+                    <!-- disableButton -->
+                    <!-- <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded opcity-50 cursor-not-allowed">性能を見てみる</button> -->
+
+                </div>
+            </div>
         </div>
 
     </script>
