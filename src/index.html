@@ -9,15 +9,60 @@
     <title>ComputerBuilder</title>
 </head>
 <body>
-    <div id="app" class="bg-gradient-to-r from-light-pink to-light-green text-gray-800 w-screen relative flex flex-col items-center p-5 border-4">
-        <div class="md:w-1/3  rounded-lg  p-4 z-10">
-            <h1 class=" text-4xl font-serif shadow-1 text-center text-semi-dark-blue z-10">Computer Builder</h1>
+    <div id="app" class="bg-gradient-to-r from-light-pink to-light-green text-gray-800 w-screen relative flex flex-col items-center p-5 pt-10 border-4">
+        <div class="md:w-1/3 p-4">
+            <h1 class="text-4xl font-serif shadow-1 text-center text-semi-dark-blue">Computer Builder</h1>
         </div>
             
         <computer-select-component></computer-select-component>
 
         <!-- resultDisplayArea -->
-        <div></div>
+        <div class="w-full p-5">
+            <div class="bg-gradient-to-r from-light-green to-light-pink px-10 pt-3 pb-5 rounded shadow-lg">
+                <div class="flex justify-center pb-5 p-3">
+                    <table class="w-full table-fixed">
+                        <thead>
+                            <th class="w-1/5 text-3xl font-serif text-center text-dark-blue">PC 1</th>
+                            <th class="w-2/5 text-3xl">Gaming -> 142%</th>
+                            <th class="w-2/5 text-3xl">Working -> 150%</th>
+                        </thead>
+                        <div></div>
+                        <div></div>
+                    </table>
+                </div>
+                <table class="w-full table-fixed">
+                    <thead class="bg-semi-light-blue text-white rounded">
+                        <tr>
+                            <th class="w-1/4 py-3 pl-3 text-left">Type</th>
+                            <th class="w-1/4 py-3 pl-3 text-left">Brand</th>
+                            <th class="w-2/4 py-3 pl-3 text-left">Model</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">CPU</th>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">Intel</th>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">Core i9-10900K</th>
+                        </tr>
+                        <tr>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">GPU</th>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">Nvidia</th>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">RTX 3090</th>
+                        </tr>
+                        <tr>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">RAM</th>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">Crucial</th>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">Ballistix Elite DDR4 3600 C16 2x8GB</th>
+                        </tr>
+                        <tr>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">SSD</th>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">Intel</th>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">900P Optane NVMe PCIe 280GB</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
 
@@ -39,43 +84,41 @@
     <!-- Storage -->
     <script type="text/x-template" id="storageComponent">
         <div>
-            <div class="">
-                <div class="p-3 flex">
-                    <p>step 4 : ストレージを決めてください</p>
-                    <div class="flex h-2 w-2" v-show="selectedModel == '' ">
-                        <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-pink-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-pink-500"></span>
-                    </div>
+            <div class="p-3 flex">
+                <p>step 4 : ストレージを決めてください</p>
+                <div class="flex h-2 w-2" v-show="selectedModel == '' ">
+                    <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-pink-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-pink-500"></span>
                 </div>
-                <div class="md:flex p-3 ">
-                    <div class="flex">
-                        <h4>HDD or SSD:</h4>
-                        <select class="ml-5 rounded" v-on:change="setStorageCapacity" v-model="selectedType">
-                            <option disabled selected> - </option>
-                            <option v-for="type in storageType">{{ type }}</option>
-                        </select>
-                    </div>
-                    <div class="flex pt-3 md:py-0 md:pl-20">
-                        <h4>Storage:</h4>
-                        <select class="ml-5 rounded" v-on:change="setBrand" v-model="selectedCapacity">
-                            <option disabled selected> - </option>
-                            <option v-for="capacity in capacityArr">{{ capacity }}</option>
-                        </select>
-                    </div>
-                    <div class="flex pt-3 md:py-0 md:pl-20">
-                        <h4>Brand: </h4>
-                        <select class="ml-5 rounded" v-on:change="setModel" v-model="selectedBrand">
-                            <option disabled selected> - </option>
-                            <option v-for="brand in brandArr">{{ brand }}</option>
-                        </select>
-                    </div>
-                    <div class="flex pt-3 md:py-0 md:pl-20">
-                        <h4>Model:</h4>
-                        <select class="ml-5 rounded" v-on:change="selectedEvent" v-model="selectedModel">
-                            <option disabled selected> - </option>
-                            <option v-for="model in modelArr">{{ model }}</option>
-                        </select>
-                    </div>
+            </div>
+            <div class="md:flex p-3 ">
+                <div class="flex">
+                    <h4>HDD or SSD:</h4>
+                    <select class="ml-5 rounded" v-on:change="setStorageCapacity" v-model="selectedType">
+                        <option disabled selected> - </option>
+                        <option v-for="type in storageType">{{ type }}</option>
+                    </select>
+                </div>
+                <div class="flex pt-3 md:py-0 md:pl-20">
+                    <h4>Storage:</h4>
+                    <select class="ml-5 rounded" v-on:change="setBrand" v-model="selectedCapacity">
+                        <option disabled selected> - </option>
+                        <option v-for="capacity in capacityArr">{{ capacity }}</option>
+                    </select>
+                </div>
+                <div class="flex pt-3 md:py-0 md:pl-20">
+                    <h4>Brand: </h4>
+                    <select class="ml-5 rounded" v-on:change="setModel" v-model="selectedBrand">
+                        <option disabled selected> - </option>
+                        <option v-for="brand in brandArr">{{ brand }}</option>
+                    </select>
+                </div>
+                <div class="flex pt-3 md:py-0 md:pl-20">
+                    <h4>Model:</h4>
+                    <select class="ml-5 rounded" v-on:change="selectedEvent" v-model="selectedModel">
+                        <option disabled selected> - </option>
+                        <option v-for="model in modelArr">{{ model }}</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -85,7 +128,6 @@
 
     <!-- Ram -->
     <script type="text/x-template" id="ramComponent">
-        <div>
             <div class="">
                 <div class="p-3 flex">
                     <p>step 3 : メモリーカードの数量と種類を決めてください</p>
@@ -118,35 +160,32 @@
                     </div>
                 </div>
             </div>
-        </div>
     </script>
 
     <!-- Gpu -->
     <script type="text/x-template" id="gpuComponent">
-        <div>
-            <div class="">
-                <div class="p-3 flex">
-                    <p>step 2 : GPUを選んでください</p>
-                    <div class="flex h-2 w-2" v-show="selectedModel == '' ">
-                        <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-pink-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-pink-500"></span>
-                    </div>
+        <div class="">
+            <div class="p-3 flex">
+                <p>step 2 : GPUを選んでください</p>
+                <div class="flex h-2 w-2" v-show="selectedModel == '' ">
+                    <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-pink-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-pink-500"></span>
                 </div>
-                <div class="md:flex p-3 ">
-                    <div class="flex">
-                        <h4>Brand: </h4>
-                        <select class="ml-5 rounded" v-on:change="setModel" v-model="selectedBrand">
-                            <option disabled selected value=""> - </option>
-                            <option v-for="brand in brandArr">{{ brand }}</option>
-                        </select>
-                    </div>
-                    <div class="flex pt-3 md:py-0 md:pl-20">
-                        <h4>Model:</h4>
-                        <select class="ml-5 rounded" v-on:change="selectedEvent" v-model="selectedModel">
-                            <option disabled selected value=""> - </option>
-                            <option v-for="model in modelArr">{{ model }}</option>
-                        </select>
-                    </div>
+            </div>
+            <div class="md:flex p-3 ">
+                <div class="flex">
+                    <h4>Brand: </h4>
+                    <select class="ml-5 rounded" v-on:change="setModel" v-model="selectedBrand">
+                        <option disabled selected value=""> - </option>
+                        <option v-for="brand in brandArr">{{ brand }}</option>
+                    </select>
+                </div>
+                <div class="flex pt-3 md:py-0 md:pl-20">
+                    <h4>Model:</h4>
+                    <select class="ml-5 rounded" v-on:change="selectedEvent" v-model="selectedModel">
+                        <option disabled selected value=""> - </option>
+                        <option v-for="model in modelArr">{{ model }}</option>
+                    </select>
                 </div>
             </div>
         </div>
