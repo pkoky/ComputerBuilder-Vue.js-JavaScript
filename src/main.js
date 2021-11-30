@@ -23,11 +23,7 @@ class Computer {
 }
 
 
-class User {
-    constructor() {
-        this.computers = [];
-    }
-}
+
 
 class MapData {
     constructor(cpu, gpu, ram, ssd, hdd) {
@@ -271,6 +267,23 @@ function selectStorage(obj) {
     })
 }
 
+
+
+var ResultComponent = {
+    template: '#resultComponent',
+    props: ['pc', 'id'],
+    data(){
+        return {
+            cpu: this.pc.cpu,
+            gpu: this.pc.gpu,
+            ram: this.pc.ram,
+            storage: this.pc.storage,
+        }
+    }
+}
+
+
+
 var AddButtonComponent = {
     template: '#addButtonComponent',
     props: ['done'],
@@ -300,6 +313,7 @@ var StorageComponent = {
             selectedBrand: '',
             modelArr: [],
             selectedModel: '',
+            arrForSelectModel: '',
         }
     },
     methods: {
@@ -314,7 +328,8 @@ var StorageComponent = {
         },
 
         selectedEvent() {
-            this.$emit("selected-event", "storage")
+            let resultObj = Controller.getResultObj(this.arrForSelectModel, this.selectedModel);
+            this.$emit("selected-event", "storage", resultObj)
         },
 
         unSelectedEvent() {
@@ -335,8 +350,9 @@ var StorageComponent = {
         setModel() {
             this.unSelectedEvent();
             this.selectedModel= '';
-            let arrForSelectModel = this.map.get(this.selectedCapacity).filter(ele => ele.Brand === this.selectedBrand);
-            arrForSelectModel.forEach(ele => this.modelArr.push(ele.Model));
+            this.modelArr = [];
+            this.arrForSelectModel = this.map.get(this.selectedCapacity).filter(ele => ele.Brand === this.selectedBrand);
+            this.arrForSelectModel.forEach(ele => this.modelArr.push(ele.Model));
         },
 
         setStorageCapacity() {
@@ -361,6 +377,7 @@ var RamComponent = {
             selectedBrand: '',
             modelArr: [],
             selectedModel: '',
+            arrForSelectModel: '',
         }
     },
     created() {
@@ -378,7 +395,8 @@ var RamComponent = {
         },
 
         selectedEvent() {
-            this.$emit("selected-event", "ram")
+            let resultObj = Controller.getResultObj(this.arrForSelectModel, this.selectedModel);
+            this.$emit("selected-event", "ram", resultObj)
         },
 
         unSelectedEvent() {
@@ -403,10 +421,8 @@ var RamComponent = {
             this. unSelectedEvent();
             this.selectedModel = '';
             this.modelArr = [];
-            let arrForSelectModel = this.map.get(this.selectedNum).filter(ele => ele.Brand === this.selectedBrand);
-            let modelArr = [];
-            arrForSelectModel.forEach(ele => modelArr.push(ele.Model))
-            this.modelArr = modelArr;
+            this.arrForSelectModel = this.map.get(this.selectedNum).filter(ele => ele.Brand === this.selectedBrand);
+            this.arrForSelectModel.forEach(ele => this.modelArr.push(ele.Model))
         }
     }
 }
@@ -423,6 +439,7 @@ var GpuComponent = {
             selectedBrand: '',
             modelArr: [],
             selectedModel: '',
+            arrForSelectModel: '',
         }
     },
     created() {
@@ -439,7 +456,8 @@ var GpuComponent = {
         },
 
         selectedEvent() {
-            this.$emit("selected-event", "gpu")
+            let resultObj = Controller.getResultObj(this.arrForSelectModel, this.selectedModel);
+            this.$emit("selected-event", "gpu", resultObj)
         },
 
         unSelectedEvent() {
@@ -450,9 +468,9 @@ var GpuComponent = {
             this.unSelectedEvent();
             this.modelArr = [];
             this.selectedModel = '';
-            let arrForSelectModel = this.map.get(this.selectedBrand);
+            this.arrForSelectModel = this.map.get(this.selectedBrand);
             // セレクトしたブランドの配列からモデルを抜き出し
-            arrForSelectModel.forEach(ele => this.modelArr.push(ele.Model));
+            this.arrForSelectModel.forEach(ele => this.modelArr.push(ele.Model));
         }
     }
 }
@@ -468,6 +486,8 @@ var CpuComponent = {
             selectedBrand: '',
             cpuModelArr: [],
             selectedModel: '',
+            arrForSelectModel: '',
+
         }
     },
     created() {
@@ -483,8 +503,11 @@ var CpuComponent = {
             })
         },
 
+        
+
         selectedEvent() {
-            this.$emit("selected-event", "cpu")
+            let resultObj = Controller.getResultObj(this.arrForSelectModel, this.selectedModel);
+            this.$emit("selected-event", "cpu", resultObj);
         },
 
         unSelectedEvent() {
@@ -495,9 +518,11 @@ var CpuComponent = {
             this.unSelectedEvent();
             this.cpuModelArr = [];
             this.selectedModel = '';
-            let cpuArrForSelectModel = this.cpuMap.get(this.selectedBrand);
+            this.arrForSelectModel = '';
+            
+            this.arrForSelectModel = this.cpuMap.get(this.selectedBrand);
             // セレクトしたブランドの配列からモデルを抜き出し
-            cpuArrForSelectModel.forEach(ele => this.cpuModelArr.push(ele.Model));
+            this.arrForSelectModel.forEach(ele => this.cpuModelArr.push(ele.Model));
         }
     }
 
@@ -512,6 +537,12 @@ var ComputerSelectComponent = {
             ram: false,
             storage: false,
             hasDone: false,
+            pcObj: {
+                cpu: '',
+                gpu: '',
+                ram: '',
+                storage: '',
+            }
         }
     },
     watch: {
@@ -529,6 +560,11 @@ var ComputerSelectComponent = {
         },
     },
     methods: {
+        createPc() {
+            
+            this.$emit("complete-event", this.pcObj);
+        },
+
         judgeHasDone() {
             if (this.cpu == true && this.gpu == true && this.ram == true && this.storage == true) {
                 this.hasDone = true;
@@ -536,36 +572,47 @@ var ComputerSelectComponent = {
             else this.hasDone = false;
         },
 
-        selectedEvent(value) {
-            switch(value) {
+        selectedEvent(...value) {
+            let type = value[0];
+            let obj = value[1];
+            switch(type) {
                 case "cpu":
                     this.cpu = true;
+                    this.pcObj.cpu = obj;
                     break;
                 case "gpu":
                     this.gpu = true;
+                    this.pcObj.gpu = obj;
                     break;
                 case "ram":
                     this.ram = true;
+                    this.pcObj.ram = obj;
                     break;
                 case "storage":
                     this.storage = true;
+                    this.pcObj.storage = obj;
                     break;
             }
+            
         },
 
         unSelectedEvent(value) {
             switch (value) {
                 case "cpu":
                     this.cpu = false;
+                    this.pcObj.cpu = '';
                     break;
                 case "gpu":
                     this.gpu = false;
+                    this.pcObj.gpu = '';
                     break;
                 case "ram":
                     this.ram = false;
+                    this.pcObj.ram = '';
                     break;
                 case "storage":
                     this.storage = false;
+                    this.pcObj.storage = '';
                     break;
             }
         }
@@ -584,9 +631,19 @@ var ComputerSelectComponent = {
 var vm = new Vue({
     el: '#app',
     data: {
-        user: new User(),
+        user: [],
+        obj: '',
+    },
+    methods: {
+        completeEvent(obj) {    
+            // 参照渡しから値渡しへ脱却
+            this.obj = JSON.parse(JSON.stringify(obj));
+            this.user.push(this.obj);
+            
+        }
     },
     components: {
         'computer-select-component': ComputerSelectComponent,
+        'result-component': ResultComponent,
     }
 })

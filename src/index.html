@@ -14,15 +14,32 @@
             <h1 class="text-4xl font-serif shadow-1 text-center text-semi-dark-blue">Computer Builder</h1>
         </div>
             
-        <computer-select-component></computer-select-component>
+        <computer-select-component
+            v-on:complete-event="completeEvent"
+        ></computer-select-component>
 
         <!-- resultDisplayArea -->
+        <div v-for="(pc, index) in user">
+            <result-component
+                v-bind:pc="pc"
+                v-bind:id="index+1"
+            >
+            </result-component>
+        </div>
+        
+        
+    </div>
+
+
+
+    <!-- Result -->
+    <script type="text/x-template" id="resultComponent">
         <div class="w-full p-5">
             <div class="bg-gradient-to-r from-light-green to-light-pink px-10 pt-3 pb-5 rounded shadow-lg">
                 <div class="flex justify-center pb-5 p-3">
                     <table class="w-full table-fixed">
                         <thead>
-                            <th class="w-1/5 text-3xl font-serif text-center text-dark-blue">PC 1</th>
+                            <th class="w-1/5 text-3xl font-serif text-center text-dark-blue">PC {{ this.id }}</th>
                             <th class="w-2/5 text-3xl">Gaming -> 142%</th>
                             <th class="w-2/5 text-3xl">Working -> 150%</th>
                         </thead>
@@ -40,32 +57,30 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">CPU</th>
-                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">Intel</th>
-                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">Core i9-10900K</th>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">{{ cpu.Type }}</th>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">{{ cpu.Brand }}</th>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">{{ cpu.Model }}</th>
                         </tr>
                         <tr>
-                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">GPU</th>
-                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">Nvidia</th>
-                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">RTX 3090</th>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">{{ gpu.Type }}</th>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">{{ gpu.Brand }}</th>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">{{ gpu.Model }}</th>
                         </tr>
                         <tr>
-                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">RAM</th>
-                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">Crucial</th>
-                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">Ballistix Elite DDR4 3600 C16 2x8GB</th>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">{{ ram.Type }}</th>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">{{ ram.Brand }}</th>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">{{ ram.Model }}</th>
                         </tr>
                         <tr>
-                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">SSD</th>
-                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">Intel</th>
-                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">900P Optane NVMe PCIe 280GB</th>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">{{ storage.Type }}</th>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">{{ storage.Brand }}</th>
+                            <th class="text-left py-3 pl-3 border-b-2 border-semi-light-blue">{{ storage.Model }}</th>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-    </div>
-
-
+    </script>
 
 
 
@@ -73,7 +88,7 @@
     <script type="text/x-template" id="addButtonComponent">
         <div class="px-3 py-5">
             <div class="">
-                <button v-if="hasDone" class="bg-white hover:bg-gray-100 hover:shadow-none  text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow-lg">性能を見てみる</button>
+                <button v-on:click="$emit('create-pc')" v-if="hasDone" class="bg-white hover:bg-gray-100 hover:shadow-none  text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow-lg">性能を見てみる</button>
                 <!-- disableButton -->
                 <button v-if="!hasDone" class="bg-white   text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow-lg cursor-not-allowed">性能を見てみる</button>
             </div>
@@ -253,6 +268,7 @@
             <!-- addButton -->
             <add-button-component
                 v-bind:done="hasDone"
+                v-on:create-pc="createPc"
             ></add-button-component>
         </div>
     </script>
