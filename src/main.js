@@ -210,6 +210,7 @@ function selectRam(obj) {
 
         let brandArr = Array.from(brandSet);
         let selectedBrand = brandArr[2];
+
         let ramArrForSelectModel = ramMap.get(selectedNum).filter(ele => ele.Brand === selectedBrand);
         let modelArr = [];
         ramArrForSelectModel.forEach(ele => modelArr.push(ele.Model))
@@ -284,6 +285,7 @@ var RamComponent = {
             brandArr: '',
             selectedBrand: '',
             modelArr: [],
+            selectedModel: '',
         }
     },
     created() {
@@ -308,6 +310,8 @@ var RamComponent = {
         },
 
         setBrands() {
+            this.selectedBrand = '';
+            this.selectedModel = '';
             this.brandArr = [];
             let brandSet = new Set();
 
@@ -318,7 +322,12 @@ var RamComponent = {
         },
 
         setModel() {
-            
+            this.selectedModel = '';
+            this.modelArr = [];
+            let arrForSelectModel = this.map.get(this.selectedNum).filter(ele => ele.Brand === this.selectedBrand);
+            let modelArr = [];
+            arrForSelectModel.forEach(ele => modelArr.push(ele.Model))
+            this.modelArr = modelArr;
         }
     }
 }
@@ -334,6 +343,7 @@ var GpuComponent = {
             brandArr: '',
             selectedBrand: '',
             modelArr: [],
+            selectedModel: '',
         }
     },
     created() {
@@ -349,8 +359,9 @@ var GpuComponent = {
             })
         },
 
-        selectBrand() {
+        setModel() {
             this.modelArr = [];
+            this.selectedModel = '';
             let arrForSelectModel = this.map.get(this.selectedBrand);
             // セレクトしたブランドの配列からモデルを抜き出し
             arrForSelectModel.forEach(ele => this.modelArr.push(ele.Model));
@@ -368,6 +379,7 @@ var CpuComponent = {
             cpuBrandArr: '',
             selectedBrand: '',
             cpuModelArr: [],
+            selectedModel: '',
         }
     },
     created() {
@@ -383,8 +395,9 @@ var CpuComponent = {
             })
         },
 
-        selectBrand() {
+        setModel() {
             this.cpuModelArr = [];
+            this.selectedModel = '';
             let cpuArrForSelectModel = this.cpuMap.get(this.selectedBrand);
             // セレクトしたブランドの配列からモデルを抜き出し
             cpuArrForSelectModel.forEach(ele => this.cpuModelArr.push(ele.Model));

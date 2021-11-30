@@ -212,10 +212,9 @@
                     </div>
                     <div class="flex pt-3 md:py-0 md:pl-20">
                         <h4>Model:</h4>
-                        <select class="ml-5 rounded">
-                            <option disabled selected value=""> - </option>
-                            <option>Core i5-9500</option>
-                            <option>Core i9-10980HK</option>
+                        <select class="ml-5 rounded" v-model="selectedModel">
+                            <option disabled selected > - </option>
+                            <option v-for="model in modelArr">{{ model }}</option>
                         </select>
                     </div>
                 </div>
@@ -237,14 +236,14 @@
                 <div class="md:flex p-3 ">
                     <div class="flex">
                         <h4>Brand: </h4>
-                        <select class="ml-5 rounded" v-on:change="selectBrand" v-model="selectedBrand">
+                        <select class="ml-5 rounded" v-on:change="setModel" v-model="selectedBrand">
                             <option disabled selected value=""> - </option>
                             <option v-for="brand in brandArr">{{ brand }}</option>
                         </select>
                     </div>
                     <div class="flex pt-3 md:py-0 md:pl-20">
                         <h4>Model:</h4>
-                        <select class="ml-5 rounded">
+                        <select class="ml-5 rounded" v-model="selectedModel">
                             <option disabled selected value=""> - </option>
                             <option v-for="model in modelArr">{{ model }}</option>
                         </select>
@@ -269,14 +268,14 @@
             <div class="md:flex p-3 ">
                 <div class="flex ">
                     <h4>Brand: </h4>
-                    <select class="ml-5 rounded" v-on:change="selectBrand" v-model="selectedBrand">
+                    <select class="ml-5 rounded" v-on:change="setModel" v-model="selectedBrand">
                         <option disabled selected value=""> - </option>
                         <option v-for="brand in cpuBrandArr">{{ brand }}</option>
                     </select>
                 </div>
                 <div class="flex pt-3 md:py-0 md:pl-20 ">
                     <h4>Model:</h4>
-                    <select class="ml-5 rounded">
+                    <select class="ml-5 rounded" v-model="selectedModel">
                         <option disabled selected value=""> - </option>
                         <option v-for="model in cpuModelArr">{{ model }}</option>
                     </select>
