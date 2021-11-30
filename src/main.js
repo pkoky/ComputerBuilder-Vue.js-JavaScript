@@ -271,7 +271,20 @@ function selectStorage(obj) {
     })
 }
 
-
+var AddButtonComponent = {
+    template: '#addButtonComponent',
+    props: ['done'],
+    data() {
+        return {
+            hasDone: this.done,
+        }
+    },
+    watch: {
+        done: function(newValue) {
+            this.hasDone = this.done;
+        },
+    }
+}
 
 
 var StorageComponent = {
@@ -287,10 +300,7 @@ var StorageComponent = {
             selectedBrand: '',
             modelArr: [],
             selectedModel: '',
-
         }
-    },
-    created() {
     },
     methods: {
         getStorageData() {
@@ -303,25 +313,36 @@ var StorageComponent = {
             })
         },
 
+        selectedEvent() {
+            this.$emit("selected-event", "storage")
+        },
+
+        unSelectedEvent() {
+            this.$emit('un-selected-event', "storage")
+        },
+
         setBrand() {
+            this.unSelectedEvent();
             this.selectedBrand = '';
+            this.selectedModel = '';
             let brandSet = new Set();
 
             // ブランド抽出
             this.map.get(this.selectedCapacity).forEach(ele => brandSet.add(ele.Brand));
             this.brandArr = Array.from(brandSet);
-            
         },
 
         setModel() {
+            this.unSelectedEvent();
+            this.selectedModel= '';
             let arrForSelectModel = this.map.get(this.selectedCapacity).filter(ele => ele.Brand === this.selectedBrand);
             arrForSelectModel.forEach(ele => this.modelArr.push(ele.Model));
         },
 
         setStorageCapacity() {
+            this.unSelectedEvent();
             this.selectedCapacity = '';
-            this.brandArr = [];
-
+            this.selectedModel = '';
             this.getStorageData();
         }
     }
@@ -356,14 +377,17 @@ var RamComponent = {
             })
         },
 
-        selectBrand() {
-            this.modelArr = [];
-            let arrForSelectModel = this.map.get(this.selectedBrand);
-            // セレクトしたブランドの配列からモデルを抜き出し
-            arrForSelectModel.forEach(ele => this.modelArr.push(ele.Model));
+        selectedEvent() {
+            this.$emit("selected-event", "ram")
         },
 
+        unSelectedEvent() {
+            this.$emit('un-selected-event', "ram")
+        },
+
+       
         setBrands() {
+            this.unSelectedEvent();
             this.selectedBrand = '';
             this.selectedModel = '';
             this.brandArr = [];
@@ -376,6 +400,7 @@ var RamComponent = {
         },
 
         setModel() {
+            this. unSelectedEvent();
             this.selectedModel = '';
             this.modelArr = [];
             let arrForSelectModel = this.map.get(this.selectedNum).filter(ele => ele.Brand === this.selectedBrand);
@@ -413,7 +438,16 @@ var GpuComponent = {
             })
         },
 
+        selectedEvent() {
+            this.$emit("selected-event", "gpu")
+        },
+
+        unSelectedEvent() {
+            this.$emit('un-selected-event', "gpu")
+        },
+
         setModel() {
+            this.unSelectedEvent();
             this.modelArr = [];
             this.selectedModel = '';
             let arrForSelectModel = this.map.get(this.selectedBrand);
@@ -449,7 +483,16 @@ var CpuComponent = {
             })
         },
 
+        selectedEvent() {
+            this.$emit("selected-event", "cpu")
+        },
+
+        unSelectedEvent() {
+            this.$emit('un-selected-event', "cpu")
+        },
+
         setModel() {
+            this.unSelectedEvent();
             this.cpuModelArr = [];
             this.selectedModel = '';
             let cpuArrForSelectModel = this.cpuMap.get(this.selectedBrand);
@@ -464,19 +507,76 @@ var ComputerSelectComponent = {
     template: '#computerSelectComponent',
     data(){
         return {
+            cpu: false,
+            gpu: false,
+            ram: false,
+            storage: false,
+            hasDone: false,
         }
     },
-    created: function() {
-    },
     watch: {
+        cpu: function() {
+            this.judgeHasDone();
+        },
+        gpu: function() {
+            this.judgeHasDone();
+        },
+        ram: function() {
+            this.judgeHasDone();
+        },
+        storage: function() {
+            this.judgeHasDone();
+        },
     },
     methods: {
+        judgeHasDone() {
+            if (this.cpu == true && this.gpu == true && this.ram == true && this.storage == true) {
+                this.hasDone = true;
+            }
+            else this.hasDone = false;
+        },
+
+        selectedEvent(value) {
+            switch(value) {
+                case "cpu":
+                    this.cpu = true;
+                    break;
+                case "gpu":
+                    this.gpu = true;
+                    break;
+                case "ram":
+                    this.ram = true;
+                    break;
+                case "storage":
+                    this.storage = true;
+                    break;
+            }
+        },
+
+        unSelectedEvent(value) {
+            switch (value) {
+                case "cpu":
+                    this.cpu = false;
+                    break;
+                case "gpu":
+                    this.gpu = false;
+                    break;
+                case "ram":
+                    this.ram = false;
+                    break;
+                case "storage":
+                    this.storage = false;
+                    break;
+            }
+        }
+
     },
     components: {
         'cpu-component': CpuComponent,
         'gpu-component': GpuComponent,
         'ram-component': RamComponent,
         'storage-component': StorageComponent,
+        'add-button-component': AddButtonComponent,
     }
 }
 
@@ -490,41 +590,3 @@ var vm = new Vue({
         'computer-select-component': ComputerSelectComponent,
     }
 })
-
-// // console.log(vm.cpuMaps)
-// Promise.resolve(fetch(config.URL + 'cpu'))
-//     .then(res => res.json())
-//     .then(data => {
-//         maps.cpu = Controller.getTargetMap(data);
-//         // vm.cpuBrands = Array.from(vm.cpuMap.keys());
-//     })
-
-// Promise.resolve(fetch(config.URL + 'gpu'))
-//     .then(res => res.json())
-//     .then(data => {
-//         vm.mapData.gpu = Controller.getTargetMap(data);
-//     })
-
-// Promise.resolve(fetch(config.URL + 'ram'))
-//     .then(res => res.json())
-//     .then(data => {
-//         vm.mapData.ram = Controller.getRamMap(data);
-//     })
-
-// Promise.resolve(fetch(config.URL + 'ssd'))
-//     .then(res => res.json())
-//     .then(data => {
-//         vm.mapData.ssd = Controller.getStorageMap(data);
-//     })
-
-// Promise.resolve(fetch(config.URL + 'hdd'))
-//     .then(res => res.json())
-//     .then(data => {
-//         vm.mapData.hdd = Controller.getStorageMap(data);
-//     })
-//     .then(()=>{
-//         vm.mapData = JSON.stringify(vm.mapData)
-        
-//     })
-    // .then(()=> console.log(vm.mapData))
-// console.log(maps)
