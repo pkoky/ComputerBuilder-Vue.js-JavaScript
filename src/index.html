@@ -184,6 +184,55 @@
 
 
 
+
+
+    <!-- Storage -->
+    <script type="text/x-template" id="storageComponent">
+        <div>
+            <div class="">
+                <div class="p-3 flex">
+                    <p>step 4 : ストレージを決めてください</p>
+                    <div class="flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-pink-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-pink-500"></span>
+                    </div>
+                </div>
+                <div class="md:flex p-3 ">
+                    <div class="flex">
+                        <h4>HDD or SSD:</h4>
+                        <select class="ml-5 rounded" v-on:change="setStorageCapacity" v-model="selectedType">
+                            <option disabled selected> - </option>
+                            <option v-for="type in storageType">{{ type }}</option>
+                        </select>
+                    </div>
+                    <div class="flex pt-3 md:py-0 md:pl-20">
+                        <h4>Storage:</h4>
+                        <select class="ml-5 rounded" v-on:change="setBrand" v-model="selectedCapacity">
+                            <option disabled selected> - </option>
+                            <option v-for="capacity in capacityArr">{{ capacity }}</option>
+                        </select>
+                    </div>
+                    <div class="flex pt-3 md:py-0 md:pl-20">
+                        <h4>Brand: </h4>
+                        <select class="ml-5 rounded" v-on:change="setModel" v-model="selectedBrand">
+                            <option disabled selected> - </option>
+                            <option v-for="brand in brandArr">{{ brand }}</option>
+                        </select>
+                    </div>
+                    <div class="flex pt-3 md:py-0 md:pl-20">
+                        <h4>Model:</h4>
+                        <select class="ml-5 rounded" v-model="selectedModel">
+                            <option disabled selected> - </option>
+                            <option v-for="model in modelArr">{{ model }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+
+
     <!-- Ram -->
     <script type="text/x-template" id="ramComponent">
         <div>
@@ -298,51 +347,8 @@
             <ram-component></ram-component>
 
             <!-- 4 -->
-            <div>
-                <div class="">
-                    <div class="p-3 flex">
-                        <p>step 4 : ストレージを決めてください</p>
-                        <div class="flex h-2 w-2">
-                            <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-pink-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-pink-500"></span>
-                        </div>
-                    </div>
-                    <div class="md:flex p-3 ">
-                        <div class="flex">
-                            <h4>HDD or SSD:</h4>
-                            <select name="" id="" class="ml-5 rounded">
-                                <option disabled selected value=""> - </option>
-                                <option value="">HDD</option>
-                                <option value="">SSD</option>
-                            </select>
-                        </div>
-                        <div class="flex pt-3 md:py-0 md:pl-20">
-                            <h4>Storage:</h4>
-                            <select name="" id="" class="ml-5 rounded">
-                                <option disabled selected value=""> - </option>
-                                <option value="">1TB</option>
-                                <option value="">500GB</option>
-                            </select>
-                        </div>
-                        <div class="flex pt-3 md:py-0 md:pl-20">
-                            <h4>Brand: </h4>
-                            <select class="ml-5 rounded">
-                                <option disabled selected value=""> - </option>
-                                <option>Intel</option>
-                                <option>AMD</option>
-                            </select>
-                        </div>
-                        <div class="flex pt-3 md:py-0 md:pl-20">
-                            <h4>Model:</h4>
-                            <select class="ml-5 rounded">
-                                <option disabled selected value=""> - </option>
-                                <option>Core i5-9500</option>
-                                <option>Core i9-10980HK</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <storage-component></storage-component>
+
             <!-- addButton -->
             <div class="px-3 py-5">
                 <div class="">

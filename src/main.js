@@ -274,6 +274,60 @@ function selectStorage(obj) {
 
 
 
+var StorageComponent = {
+    template: '#storageComponent',
+    data(){
+        return {
+            storageType: config.STORAGE,
+            selectedType: '',
+            map: '',
+            capacityArr: '',
+            selectedCapacity: '',
+            brandArr: [],
+            selectedBrand: '',
+            modelArr: [],
+            selectedModel: '',
+
+        }
+    },
+    created() {
+    },
+    methods: {
+        getStorageData() {
+            Promise.resolve(fetch(config.URL + this.selectedType))
+            .then(res => res.json())
+            .then(data => {
+                this.map = Controller.getStorageMap(data);
+                this.capacityArr = Controller.getKeysArr(this.map);
+                this.capacityArr = Controller.sortStorageArr(this.capacityArr);
+            })
+        },
+
+        setBrand() {
+            this.selectedBrand = '';
+            let brandSet = new Set();
+
+            // ブランド抽出
+            this.map.get(this.selectedCapacity).forEach(ele => brandSet.add(ele.Brand));
+            this.brandArr = Array.from(brandSet);
+            
+        },
+
+        setModel() {
+            let arrForSelectModel = this.map.get(this.selectedCapacity).filter(ele => ele.Brand === this.selectedBrand);
+            arrForSelectModel.forEach(ele => this.modelArr.push(ele.Model));
+        },
+
+        setStorageCapacity() {
+            this.selectedCapacity = '';
+            this.brandArr = [];
+
+            this.getStorageData();
+        }
+    }
+}
+
+
 
 var RamComponent = {
     template: `#ramComponent`,
@@ -422,6 +476,7 @@ var ComputerSelectComponent = {
         'cpu-component': CpuComponent,
         'gpu-component': GpuComponent,
         'ram-component': RamComponent,
+        'storage-component': StorageComponent,
     }
 }
 
