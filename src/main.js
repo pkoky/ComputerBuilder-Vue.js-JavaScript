@@ -595,7 +595,6 @@ var ComputerSelectComponent = {
     },
     methods: {
         createPc() {
-            this.hasDone = false;
             this.pcObj.benchmark.gamingScore = Controller.calculateBenchmarkScore(this.pcObj, "Gaming");
             this.pcObj.benchmark.workingScore = Controller.calculateBenchmarkScore(this.pcObj, "Working");
             this.$emit("complete-event", this.pcObj);
@@ -629,7 +628,6 @@ var ComputerSelectComponent = {
                     this.pcObj.storage = obj;
                     break;
             }
-            
         },
 
         unSelectedEvent(value) {
