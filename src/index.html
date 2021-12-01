@@ -40,8 +40,8 @@
                     <table class="w-full table-fixed">
                         <thead>
                             <th class="w-1/5 text-3xl font-serif text-center text-dark-blue">PC {{ this.id }}</th>
-                            <th class="w-2/5 text-3xl">Gaming -> 142%</th>
-                            <th class="w-2/5 text-3xl">Working -> 150%</th>
+                            <th class="w-2/5 text-3xl">Gaming -> {{ benchmark.gamingScore }}%</th>
+                            <th class="w-2/5 text-3xl">Working -> {{ benchmark.workingScore }}%</th>
                         </thead>
                         <div></div>
                         <div></div>
@@ -279,3 +279,22 @@
 </body>
 </html>
 
+<!--
+    ゲーミングコンピュータ
+    GPU 性能 60%
+    CPU 性能 25%
+    RAM 12.5%
+    ストレージ 2.5%
+
+    作業用コンピュータ
+    CPU 性能 60%
+    GPU 性能 25%
+    RAM 10%
+    ストレージ 5%
+-->
+
+<!-- 
+102
+46.8
+232
+277 -->

@@ -8,6 +8,20 @@ const config = {
     },
     'GPU': [],
     'STORAGE': ['ssd', 'hdd'],
+    'BENCHMARKRATIO': {
+        'Gaming': {
+            'cpu': 0.25,
+            'gpu': 0.6,
+            'ram': 0.125,
+            'storage': 0.1
+        },
+        'Working': {
+            'cpu': 0.6,
+            'gpu': 0.25,
+            'ram': 0.1,
+            'storage': 0.05
+        }
+    }
 }
 
 let a = config.cpuMap
@@ -45,6 +59,32 @@ class MapData {
 
 
 class Controller {
+    static calculateBenchmarkScore(obj, type) {
+        let benchmarkData = '';
+        if (type === "Gaming") {
+            benchmarkData = config.BENCHMARKRATIO.Gaming;
+        } else if (type === "Working") {
+            benchmarkData = config.BENCHMARKRATIO.Working;
+        }
+
+        let cpu = obj.cpu.Benchmark * benchmarkData.cpu;
+        let gpu = obj.gpu.Benchmark * benchmarkData.gpu;
+        let ram = obj.ram.Benchmark * benchmarkData.ram;
+        let storage = obj.storage.Benchmark * benchmarkData.storage;
+        console.log(cpu)
+        let result = Math.floor(cpu + ram + gpu + storage);
+
+        return result
+    }
+
+    static calculateWorkingScore(obj) {
+        let benchmarkData = config.BENCHMARKRATIO.Working;
+        let cpu = obj.cpu.Benchmark * benchmarkData.cpu;
+        let gpu = obj.gpu.Benchmark * benchmarkData.gpu;
+        let ram = obj.ram.Benchmark * benchmarkData.ram;
+        let storage = obj.storage.Benchmark * benchmarkData.storage;
+        let result = cpu + ram + gpu + storage;
+    }
     
     static getKeysArr(map) {
         return Array.from(map.keys());
@@ -278,6 +318,7 @@ var ResultComponent = {
             gpu: this.pc.gpu,
             ram: this.pc.ram,
             storage: this.pc.storage,
+            benchmark: this.pc.benchmark
         }
     }
 }
@@ -503,8 +544,6 @@ var CpuComponent = {
             })
         },
 
-        
-
         selectedEvent() {
             let resultObj = Controller.getResultObj(this.arrForSelectModel, this.selectedModel);
             this.$emit("selected-event", "cpu", resultObj);
@@ -542,6 +581,10 @@ var ComputerSelectComponent = {
                 gpu: '',
                 ram: '',
                 storage: '',
+                benchmark: {
+                    gamingScore: '',
+                    workingScore: '',
+                }
             }
         }
     },
@@ -561,7 +604,10 @@ var ComputerSelectComponent = {
     },
     methods: {
         createPc() {
-            
+            this.pcObj.benchmark.gamingScore = Controller.calculateBenchmarkScore(this.pcObj, "Gaming");
+            this.pcObj.benchmark.workingScore = Controller.calculateBenchmarkScore(this.pcObj, "Working");
+            console.log(this.pcObj.benchmark.gamingScore)
+            console.log(this.pcObj.benchmark.workingScore)
             this.$emit("complete-event", this.pcObj);
         },
 
