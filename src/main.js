@@ -77,15 +77,6 @@ class Controller {
         return result
     }
 
-    static calculateWorkingScore(obj) {
-        let benchmarkData = config.BENCHMARKRATIO.Working;
-        let cpu = obj.cpu.Benchmark * benchmarkData.cpu;
-        let gpu = obj.gpu.Benchmark * benchmarkData.gpu;
-        let ram = obj.ram.Benchmark * benchmarkData.ram;
-        let storage = obj.storage.Benchmark * benchmarkData.storage;
-        let result = cpu + ram + gpu + storage;
-    }
-    
     static getKeysArr(map) {
         return Array.from(map.keys());
     }
@@ -604,10 +595,9 @@ var ComputerSelectComponent = {
     },
     methods: {
         createPc() {
+            this.hasDone = false;
             this.pcObj.benchmark.gamingScore = Controller.calculateBenchmarkScore(this.pcObj, "Gaming");
             this.pcObj.benchmark.workingScore = Controller.calculateBenchmarkScore(this.pcObj, "Working");
-            console.log(this.pcObj.benchmark.gamingScore)
-            console.log(this.pcObj.benchmark.workingScore)
             this.$emit("complete-event", this.pcObj);
         },
 
@@ -685,7 +675,6 @@ var vm = new Vue({
             // 参照渡しから値渡しへ脱却
             this.obj = JSON.parse(JSON.stringify(obj));
             this.user.push(this.obj);
-            
         }
     },
     components: {
