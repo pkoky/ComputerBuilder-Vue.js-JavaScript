@@ -71,7 +71,6 @@ class Controller {
         let gpu = obj.gpu.Benchmark * benchmarkData.gpu;
         let ram = obj.ram.Benchmark * benchmarkData.ram;
         let storage = obj.storage.Benchmark * benchmarkData.storage;
-        console.log(cpu)
         let result = Math.floor(cpu + ram + gpu + storage);
 
         return result
@@ -302,16 +301,17 @@ function selectStorage(obj) {
 
 var ResultComponent = {
     template: '#resultComponent',
-    props: ['pc', 'id'],
+    props: ['pc'],
     data(){
         return {
             cpu: this.pc.cpu,
             gpu: this.pc.gpu,
             ram: this.pc.ram,
             storage: this.pc.storage,
-            benchmark: this.pc.benchmark
+            benchmark: this.pc.benchmark,
+            id: this.pc.id,
         }
-    }
+    },
 }
 
 
@@ -572,6 +572,7 @@ var ComputerSelectComponent = {
                 gpu: '',
                 ram: '',
                 storage: '',
+                id: '',
                 benchmark: {
                     gamingScore: '',
                     workingScore: '',
@@ -672,6 +673,7 @@ var vm = new Vue({
         completeEvent(obj) {    
             // 参照渡しから値渡しへ脱却
             this.obj = JSON.parse(JSON.stringify(obj));
+            this.obj.id = this.user.length+1
             this.user.push(this.obj);
         }
     },

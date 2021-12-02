@@ -19,10 +19,10 @@
         ></computer-select-component>
 
         <!-- resultDisplayArea -->
-        <div v-for="(pc, index) in user">
+        <div v-for="pc in user" v-bind:key="pc.id">
+            {{ pc.id }}
             <result-component
                 v-bind:pc="pc"
-                v-bind:id="index+1"
             >
             </result-component>
         </div>
@@ -39,7 +39,7 @@
                 <div class="flex justify-center pb-5 p-3">
                     <table class="w-full table-fixed">
                         <thead>
-                            <th class="w-1/5 text-3xl font-serif text-center text-dark-blue">PC {{ this.id }}</th>
+                            <th class="w-1/5 text-3xl font-serif text-center text-dark-blue">PC {{ id }}</th>
                             <th class="w-2/5 text-3xl">Gaming -> {{ benchmark.gamingScore }}%</th>
                             <th class="w-2/5 text-3xl">Working -> {{ benchmark.workingScore }}%</th>
                         </thead>
