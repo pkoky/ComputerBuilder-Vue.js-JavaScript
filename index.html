@@ -20,13 +20,11 @@
 
         <!-- resultDisplayArea -->
         <div v-for="pc in user" v-bind:key="pc.id">
-            {{ pc.id }}
             <result-component
                 v-bind:pc="pc"
             >
             </result-component>
         </div>
-        
         
     </div>
 
