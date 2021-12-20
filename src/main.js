@@ -207,6 +207,7 @@ var StorageComponent = {
 
         setStorageCapacity() {
             this.unSelectedEvent();
+            this.selectedBrand = '';
             this.selectedCapacity = '';
             this.selectedModel = '';
             this.getStorageData();
