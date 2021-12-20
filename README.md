@@ -1,7 +1,6 @@
 <h1 align="center">Computer Builder</h1>
 
-<!-- ![newdemo]() -->
-
+![recording (2)](https://user-images.githubusercontent.com/78239360/146699310-3ee4c8b3-2cc9-4565-85c6-999b084ab354.gif)
 ---
 
 見ていただきありがとうございます。
