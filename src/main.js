@@ -1,5 +1,3 @@
-// import fetch from 'node-fetch'
-
 const config = {
     'URL': 'https://api.recursionist.io/builder/computers?type=',
     'STORAGE': ['ssd', 'hdd'],
