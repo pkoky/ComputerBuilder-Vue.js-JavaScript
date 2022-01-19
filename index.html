@@ -9,8 +9,8 @@
     <title>ComputerBuilder</title>
 </head>
 <body>
-    <div id="app"> 
-        <div id="" class="bg-gradient-to-r from-light-pink to-light-green text-gray-800 w-screen relative flex flex-col items-center p-5 pt-10 border-4" v-bind:class="{'h-screen': user.length == 0}">
+    <div id="app" v-bind:class="{'h-screen': user.length == 0}"> 
+        <div id="" class="bg-gradient-to-r from-light-pink to-light-green text-gray-800 w-screen relative flex flex-col items-center p-5 pt-10 border-4 md:h-full" >
             <div class="md:w-1/3 p-4">
                 <h1 class="text-4xl font-serif shadow-1 text-center text-semi-dark-blue">Computer Builder</h1>
             </div>
@@ -129,7 +129,7 @@
                 </div>
                 <div class="flex pt-3 md:py-0 md:pl-20">
                     <h4>Model:</h4>
-                    <select class="ml-5 rounded" v-on:change="selectedEvent" v-model="selectedModel">
+                    <select class="ml-5 rounded w-full" v-on:change="selectedEvent" v-model="selectedModel">
                         <option disabled selected> - </option>
                         <option v-for="model in modelArr">{{ model }}</option>
                     </select>
@@ -167,7 +167,7 @@
                     </div>
                     <div class="flex pt-3 md:py-0 md:pl-20">
                         <h4>Model:</h4>
-                        <select class="ml-5 rounded" v-on:change="selectedEvent" v-model="selectedModel">
+                        <select class="ml-5 rounded w-full" v-on:change="selectedEvent" v-model="selectedModel">
                             <option disabled selected > - </option>
                             <option v-for="model in modelArr">{{ model }}</option>
                         </select>
@@ -196,7 +196,7 @@
                 </div>
                 <div class="flex pt-3 md:py-0 md:pl-20">
                     <h4>Model:</h4>
-                    <select class="ml-5 rounded" v-on:change="selectedEvent" v-model="selectedModel">
+                    <select class="ml-5 rounded w-full" v-on:change="selectedEvent" v-model="selectedModel">
                         <option disabled selected value=""> - </option>
                         <option v-for="model in modelArr">{{ model }}</option>
                     </select>
