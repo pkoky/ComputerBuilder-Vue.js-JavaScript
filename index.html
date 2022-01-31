@@ -107,29 +107,29 @@
                     <span class="relative inline-flex rounded-full h-2 w-2 bg-pink-500"></span>
                 </div>
             </div>
-            <div class="md:flex p-3 ">
-                <div class="flex">
+            <div class="md:flex flex-wrap p-3 ">
+                <div class="flex pb-3">
                     <h4>HDD or SSD:</h4>
                     <select class="ml-5 rounded" v-on:change="setStorageCapacity" v-model="selectedType">
                         <option disabled selected> - </option>
                         <option v-for="type in storageType">{{ type }}</option>
                     </select>
                 </div>
-                <div class="flex pt-3 md:py-0 md:pl-20">
+                <div class="flex pb-3 md:py-0 md:pl-20">
                     <h4>Storage:</h4>
                     <select class="ml-5 rounded" v-on:change="setBrand" v-model="selectedCapacity">
                         <option disabled selected> - </option>
                         <option v-for="capacity in capacityArr">{{ capacity }}</option>
                     </select>
                 </div>
-                <div class="flex pt-3 md:py-0 md:pl-20">
+                <div class="flex pb-3 md:py-0 md:pl-20">
                     <h4>Brand: </h4>
                     <select class="ml-5 rounded" v-on:change="setModel" v-model="selectedBrand">
                         <option disabled selected> - </option>
                         <option v-for="brand in brandArr">{{ brand }}</option>
                     </select>
                 </div>
-                <div class="flex pt-3 md:py-0 md:pl-20">
+                <div class="flex md:py-0 md:pl-20">
                     <h4>Model:</h4>
                     <select class="ml-5 rounded w-full" v-on:change="selectedEvent" v-model="selectedModel">
                         <option disabled selected> - </option>
@@ -241,7 +241,7 @@
 
     <!-- ComputerComponent -->
     <script type="text/x-template" id="computerSelectComponent">
-        <div class="w-full p-5 flex flex-col justify-start">
+        <div class="w-full md:w-4/5 lg:w-3/5 p-5 flex flex-col justify-center">
             <!-- 1 -->
             <cpu-component
                 v-on:selected-event="selectedEvent"
